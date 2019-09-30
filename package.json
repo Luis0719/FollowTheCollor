@@ -2,9 +2,9 @@
   "name": "simonsays",
   "version": "1.0.0",
   "description": "Distributed sistems final project",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "start": "node ./index.js"
+    "start": "node ./app.js"
   },
   "author": "",
   "license": "ISC",
