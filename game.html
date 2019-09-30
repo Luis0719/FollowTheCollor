@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
+    <link rel="stylesheet" href="css/main.css">
+  </head>
+  <body>
+    <h1>Game on</h1>
+    <section class="game-container">
+        <div class="color-box color-box-red">
+            <button class="background js-add-colorbox" data-color='red'></button>
+        </div>
+        <div class="color-box color-box-blue">
+            <button class="background js-add-colorbox" data-color='blue'></button>
+        </div>
+        <div class="color-box color-box-yellow">
+            <button class="background js-add-colorbox" data-color='yellow'></button>
+        </div>
+        <div class="color-box color-box-green">
+            <button class="background js-add-colorbox" data-color='green'></button>
+        </div>
+    </section>
+    <section id="samples">
+
+    </section>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+        $(function () {
+            var socket = io();
+            $('.js-add-colorbox').click(function(e){
+                e.preventDefault(); // prevents page reloading
+                console.log($(this).attr('data-color'));
+                
+                socket.emit('add-color', $(this).attr('data-color'));
+                return false;
+            });
+
+            socket.on('add-color', function(color){
+                let container = document.getElementById("samples");
+                let color_box = document.createElement("div");
+                color_box.className = `color-sample ${color}-box`;
+                container.appendChild(color_box);
+            });
+        });        
+    </script>   
+  </body>
+</html>

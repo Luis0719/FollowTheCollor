@@ -1,0 +1,133 @@
+$red: #DB5461;
+$dark_red: rgb(194, 76, 88);
+$green: #43C59E;
+$dark_green: rgb(53, 155, 124);
+$yellow: #F3C677;
+$dark_yellow: rgb(202, 164, 98);
+$blue: #48BEFF;
+$dark_blue: rgb(64, 166, 221);
+
+*{
+    box-sizing: border-box;
+}
+
+.game-container{
+    width: 400px;
+    height: 400px;
+    display: grid;
+    grid-template-rows: 50% 50%;
+    grid-template-columns: 50% 50%;
+    grid-template-areas: "red green"
+                         "yellow blue";
+}
+
+.color-box-red{
+    grid-area: red;
+    
+    > button.background{
+        background-color: $red;
+
+        &:hover{
+            background: $dark_red;
+        }
+
+        &:active {
+            background-color: $dark_red;
+            box-shadow: 0 5px #666;
+            transform: translateY(4px);
+        }
+    }
+}
+
+.color-box-green{
+    grid-area: green;
+    
+    > button.background{
+        background-color: $green;
+
+        &:hover{
+            background: $dark_green;
+        }
+
+        &:active {
+            background-color: $dark_green;
+            box-shadow: 0 5px #666;
+            transform: translateY(4px);
+        }
+    }
+}
+
+.color-box-yellow{
+    grid-area: yellow;
+    
+    > button.background{
+        background-color: $yellow;
+
+        &:hover{
+            background: $dark_yellow;
+        }
+
+        &:active {
+            background-color: $dark_yellow;
+            box-shadow: 0 5px #666;
+            transform: translateY(4px);
+        }
+    }
+}
+
+.color-box-blue{
+    grid-area: blue;
+    
+    > button.background{
+        background-color: $blue;
+
+        &:hover{
+            background: $dark_blue;
+        }
+
+        &:active {
+            background-color: $dark_blue;
+            box-shadow: 0 5px #666;
+            transform: translateY(4px);
+        }
+    }
+}
+
+.color-box{
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+
+    > button.background{
+        width: 100%;
+        height: 100%;
+        border-radius: 5%;
+        box-shadow: 0 5px #999;
+        outline: none;
+    }
+}
+
+#samples{
+    .color-sample{
+        display: inline-block;
+        margin-right: 5px;
+        width: 20px;
+        height: 20px;
+    }
+    
+    .red-box{
+        background-color: $red;
+    }
+
+    .blue-box{
+        background-color: $blue;
+    }
+
+    .green-box{
+        background-color: $green;
+    }
+
+    .yellow-box{
+        background-color: $yellow;
+    }
+}
