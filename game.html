@@ -30,9 +30,7 @@
         $(function () {
             var socket = io();
             $('.js-add-colorbox').click(function(e){
-                e.preventDefault(); // prevents page reloading
-                console.log($(this).attr('data-color'));
-                
+                e.preventDefault(); // prevents page reloading                
                 socket.emit('add-color', $(this).attr('data-color'));
                 return false;
             });

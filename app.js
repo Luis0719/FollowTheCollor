@@ -13,11 +13,10 @@ io.on('connection', function(socket){
   console.log('connected');
   
   socket.on('add-color', function(color){
-    console.log(color);
     io.emit('add-color', color);
   });
 });
 
-http.listen(3000, function(){
+http.listen(process.env.PORT || 3000, function(){
   console.log('listening on *:3000');
 });
