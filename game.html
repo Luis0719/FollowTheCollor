@@ -19,29 +19,49 @@
         <div class="color-box color-box-green">
             <button class="background js-add-colorbox" data-color='green'></button>
         </div>
+
+        <button id="connect" onclick="connect()">
+            Connect
+        </button>
+        <button id="disconnect" onclick="disconnect()" disabled>
+            Disconnect
+        </button>
     </section>
     <section id="samples">
 
     </section>
 
     <script src="/socket.io/socket.io.js"></script>
-    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
-        $(function () {
-            var socket = io();
-            $('.js-add-colorbox').click(function(e){
-                e.preventDefault(); // prevents page reloading                
-                socket.emit('add-color', $(this).attr('data-color'));
-                return false;
-            });
+        var socket = io();
+        socket.on('redirect', function(destination) {
+            window.location.href = destination;
+        });
+        // let socket;
+        // let statusInput;
+        // let nameInput;
 
-            socket.on('add-color', function(color){
-                let container = document.getElementById("samples");
-                let color_box = document.createElement("div");
-                color_box.className = `color-sample ${color}-box`;
-                container.appendChild(color_box);
-            });
-        });        
+        // const connect = () => {
+        //     socket = io(socketUrl, {
+        //         autoConnect: false,
+        //     });
+
+        //     socket.on('connect', () => {
+        //         console.log('Connected');
+        //         statusInput.value = 'Connected';
+        //     });
+
+        //     socket.on('disconnect', (reason) => {
+        //         console.log(`Disconnected: ${reason}`);
+        //         statusInput.value = `Disconnected: ${reason}`;
+        //     })
+
+        //     socket.open();
+        // };
+
+        // const disconnect = () => {
+        //     socket.disconnect();
+        // }      
     </script>   
   </body>
 </html>

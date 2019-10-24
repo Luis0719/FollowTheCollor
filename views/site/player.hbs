@@ -1,0 +1,47 @@
+<h1>You are a player</h1>
+
+<section class="game-container">
+    <div class="color-box color-box-red">
+        <button class="background js-add-colorbox" data-color='red'></button>
+    </div>
+    <div class="color-box color-box-blue">
+        <button class="background js-add-colorbox" data-color='blue'></button>
+    </div>
+    <div class="color-box color-box-yellow">
+        <button class="background js-add-colorbox" data-color='yellow'></button>
+    </div>
+    <div class="color-box color-box-green">
+        <button class="background js-add-colorbox" data-color='green'></button>
+    </div>
+</section>
+
+<p>
+    <h3>Current color sequence:</h3>
+    <section id="sequence-container" class="samples"></section>
+</p>
+
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    var socket = io();
+    socket.emit('game-player-ready', "{{playername}}");
+
+    socket.on('redirect', function(destination) {
+        window.location.href = destination;
+    });
+</script>
+
+<script>
+    $('.js-add-colorbox').click(function(e){
+        e.preventDefault(); // prevents page reloading                
+        let color = $(this).attr('data-color');
+        socket.emit('player-add-player-color', color);
+
+        let container = document.getElementById("sequence-container");
+        let color_box = document.createElement("div");
+        color_box.className = `color-sample ${color}-box`;
+        container.appendChild(color_box);
+
+        return false;
+    })
+</script>

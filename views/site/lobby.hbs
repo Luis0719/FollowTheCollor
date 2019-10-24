@@ -1,0 +1,41 @@
+<input type="hidden" name="playername" value="{{playername}}">
+
+Registered players:
+<ul id="players-list">
+{{#each players}}
+    <li id="{{this.gameid}}">{{ this.playername }}</li>
+{{/each}}
+</ul>
+
+<button class="js-ready">Ready</button>
+
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    var socket = io();
+    playername = $('input[name=playername]').val();
+    socket.emit('register-player', playername);
+
+    $('.js-ready').click(function() {
+        $(this).attr("disabled", true);
+        socket.emit('lobby-player-ready');
+    });
+
+    socket.on('lobby-add-player', function(gameid, playername) {
+        var ul = document.getElementById("players-list");
+        var li = document.createElement("li");
+        li.setAttribute("id", gameid); // added line
+        li.appendChild(document.createTextNode(playername));
+        ul.appendChild(li);
+    });
+
+    socket.on('lobby-remove-player', function(gameid) {
+        var ul = document.getElementById("players-list");
+        var li = document.getElementById(gameid);
+        ul.removeChild(li);
+    });
+
+    socket.on('redirect', function(destination) {
+        window.location.href = destination;
+    });
+</script>

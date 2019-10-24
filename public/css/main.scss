@@ -11,6 +11,11 @@ $dark_blue: rgb(64, 166, 221);
     box-sizing: border-box;
 }
 
+.disabled{
+    pointer-events: none;
+    opacity: 0.3;
+}
+
 .game-container{
     width: 400px;
     height: 400px;
@@ -107,7 +112,7 @@ $dark_blue: rgb(64, 166, 221);
     }
 }
 
-#samples{
+.samples{
     .color-sample{
         display: inline-block;
         margin-right: 5px;

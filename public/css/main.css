@@ -3,6 +3,11 @@
           box-sizing: border-box;
 }
 
+.disabled {
+  pointer-events: none;
+  opacity: 0.3;
+}
+
 .game-container {
   width: 400px;
   height: 400px;
@@ -118,26 +123,26 @@
   outline: none;
 }
 
-#samples .color-sample {
+.samples .color-sample {
   display: inline-block;
   margin-right: 5px;
   width: 20px;
   height: 20px;
 }
 
-#samples .red-box {
+.samples .red-box {
   background-color: #DB5461;
 }
 
-#samples .blue-box {
+.samples .blue-box {
   background-color: #48BEFF;
 }
 
-#samples .green-box {
+.samples .green-box {
   background-color: #43C59E;
 }
 
-#samples .yellow-box {
+.samples .yellow-box {
   background-color: #F3C677;
 }
 /*# sourceMappingURL=main.css.map */

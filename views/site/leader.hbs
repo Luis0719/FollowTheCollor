@@ -1,0 +1,104 @@
+<h1>You are the leader</h1>
+
+<p>
+    <section class="game-container">
+        <div class="color-box color-box-red">
+            <button class="background js-add-colorbox" data-color='red'></button>
+        </div>
+        <div class="color-box color-box-blue">
+            <button class="background js-add-colorbox" data-color='blue'></button>
+        </div>
+        <div class="color-box color-box-yellow">
+            <button class="background js-add-colorbox" data-color='yellow'></button>
+        </div>
+        <div class="color-box color-box-green">
+            <button class="background js-add-colorbox" data-color='green'></button>
+        </div>
+    </section>
+</p>
+
+<p>
+    <h3>Current color sequence:</h3>
+    <section id="sequence-container" class="samples">
+        {{#each colorSequence}}
+            <div class="color-sample {{this}}-box"></div>
+        {{/each}}
+    </section>
+</p>
+
+<p>
+    <h3>Players:</h3>
+    <section id="players-container">
+        {{#each players}}
+            <div>
+                <span>{{this.playername}}</span>
+                <div id="sequence-{{this.id}}"></div>
+            </div>
+        {{/each}}
+    </section>
+</p>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    var socket = io();
+    socket.emit('game-leader-ready', "{{playername}}");
+
+    socket.on('add-player-color', function(gameid, color){
+        console.log("sequence-" + gameid);
+        let container = document.getElementById(gameid);
+        let color_box = document.createElement("div");
+        color_box.className = `color-sample ${color}-box`;
+        container.appendChild(color_box);
+    });
+
+    socket.on('leader-turn', function() {
+        $('.js-add-colorbox').removeClass('disabled');
+    });
+
+    socket.on('leader-won', function() {
+
+    })
+
+    socket.on('set-players', function(players) {
+        let container = document.getElementById('players-container');
+        players = JSON.parse(players);
+        console.log(players);
+        players.forEach(function(player){
+            console.log(player);
+            let parent_div = document.createElement("div");
+            parent_div.className = "samples";
+
+            let name_span = document.createElement("span");
+            name_span.innerText = player.playername;
+
+            let sequence_div = document.createElement("div");
+            sequence_div.id = player.id;
+
+            parent_div.appendChild(name_span);
+            parent_div.appendChild(sequence_div);
+
+            container.appendChild(parent_div);
+        });
+    })
+
+    socket.on('redirect', function(destination) {
+        window.location.href = destination;
+    });
+</script>
+
+<script>
+    $('.js-add-colorbox').click(function(e){
+        e.preventDefault(); // prevents page reloading                
+        let color = $(this).attr('data-color');
+        socket.emit('leader-color-choice', color);
+
+        let container = document.getElementById("sequence-container");
+        let color_box = document.createElement("div");
+        color_box.className = `color-sample ${color}-box`;
+        container.appendChild(color_box);
+
+        $('.js-add-colorbox').addClass('disabled');
+
+        return false;
+    })
+</script>
