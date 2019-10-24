@@ -1,0 +1,142 @@
+* {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+.game-container {
+  width: 400px;
+  height: 400px;
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-rows: 50% 50%;
+      grid-template-rows: 50% 50%;
+  -ms-grid-columns: 50% 50%;
+      grid-template-columns: 50% 50%;
+      grid-template-areas: "red green" "yellow blue";
+}
+
+.color-box-red {
+  -ms-grid-row: 1;
+  -ms-grid-column: 1;
+  grid-area: red;
+}
+
+.color-box-red > button.background {
+  background-color: #DB5461;
+}
+
+.color-box-red > button.background:hover {
+  background: #c24c58;
+}
+
+.color-box-red > button.background:active {
+  background-color: #c24c58;
+  -webkit-box-shadow: 0 5px #666;
+          box-shadow: 0 5px #666;
+  -webkit-transform: translateY(4px);
+          transform: translateY(4px);
+}
+
+.color-box-green {
+  -ms-grid-row: 1;
+  -ms-grid-column: 2;
+  grid-area: green;
+}
+
+.color-box-green > button.background {
+  background-color: #43C59E;
+}
+
+.color-box-green > button.background:hover {
+  background: #359b7c;
+}
+
+.color-box-green > button.background:active {
+  background-color: #359b7c;
+  -webkit-box-shadow: 0 5px #666;
+          box-shadow: 0 5px #666;
+  -webkit-transform: translateY(4px);
+          transform: translateY(4px);
+}
+
+.color-box-yellow {
+  -ms-grid-row: 2;
+  -ms-grid-column: 1;
+  grid-area: yellow;
+}
+
+.color-box-yellow > button.background {
+  background-color: #F3C677;
+}
+
+.color-box-yellow > button.background:hover {
+  background: #caa462;
+}
+
+.color-box-yellow > button.background:active {
+  background-color: #caa462;
+  -webkit-box-shadow: 0 5px #666;
+          box-shadow: 0 5px #666;
+  -webkit-transform: translateY(4px);
+          transform: translateY(4px);
+}
+
+.color-box-blue {
+  -ms-grid-row: 2;
+  -ms-grid-column: 2;
+  grid-area: blue;
+}
+
+.color-box-blue > button.background {
+  background-color: #48BEFF;
+}
+
+.color-box-blue > button.background:hover {
+  background: #40a6dd;
+}
+
+.color-box-blue > button.background:active {
+  background-color: #40a6dd;
+  -webkit-box-shadow: 0 5px #666;
+          box-shadow: 0 5px #666;
+  -webkit-transform: translateY(4px);
+          transform: translateY(4px);
+}
+
+.color-box {
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+}
+
+.color-box > button.background {
+  width: 100%;
+  height: 100%;
+  border-radius: 5%;
+  -webkit-box-shadow: 0 5px #999;
+          box-shadow: 0 5px #999;
+  outline: none;
+}
+
+#samples .color-sample {
+  display: inline-block;
+  margin-right: 5px;
+  width: 20px;
+  height: 20px;
+}
+
+#samples .red-box {
+  background-color: #DB5461;
+}
+
+#samples .blue-box {
+  background-color: #48BEFF;
+}
+
+#samples .green-box {
+  background-color: #43C59E;
+}
+
+#samples .yellow-box {
+  background-color: #F3C677;
+}
