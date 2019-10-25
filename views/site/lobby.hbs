@@ -1,14 +1,31 @@
 <input type="hidden" name="playername" value="{{playername}}">
 
-Registered players:
-<ul id="players-list">
-{{#each players}}
-    <li id="{{this.gameid}}">{{ this.playername }}</li>
-{{/each}}
-</ul>
+<div class="vh-center-content">
+    <div class="content h-center-content">
+        <div class="legend">
+            <h3>Waiting...</h3>
+        </div>
+        <div class="PlayerContainers">
+            <h4>Current players:</h4>
+            <ul id="players-list" class="text-left">
+            {{#each players}}
+                <li id="{{this.gameid}}">{{ this.playername }}</li>
+            {{/each}}
+            </ul>
+        </div>
 
-<button class="js-ready">Ready</button>
+        <button class="btn btn-success js-ready">
+            Ready
+        </button>
+    </div>
+</div>
 
+<div id="waiting-box" class="message-box">
+    <div class="content h-center-content">
+        <div>Waiting for other players</div>
+        <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+    </div>
+</div>
 
 <script src="/socket.io/socket.io.js"></script>
 <script>
@@ -19,6 +36,8 @@ Registered players:
     $('.js-ready').click(function() {
         $(this).attr("disabled", true);
         socket.emit('lobby-player-ready');
+
+        $('#waiting-box').fadeIn();
     });
 
     socket.on('lobby-add-player', function(gameid, playername) {

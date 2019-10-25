@@ -11,9 +11,55 @@ $dark_blue: rgb(64, 166, 221);
     box-sizing: border-box;
 }
 
+body{
+    min-width: 1000px;
+    height: 100vh;
+}
+
 .disabled{
     pointer-events: none;
     opacity: 0.3;
+}
+
+ul{
+    list-style-type: square;
+}
+
+.vh-center-content{
+    position: relative;
+    height: 100%;
+    width: 100%;
+
+    .content{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+}
+
+.h-center-content{
+    text-align: center;
+}
+
+.message-box{
+    display: none;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    height: 100vh;
+    width: 100vw;
+    background: rgba(0, 0, 0, 0.5);
+
+    .content{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 30px;
+        color: rgba(255, 255, 255, 0.8);
+        text-align: center;
+    }
 }
 
 .game-container{
@@ -135,4 +181,40 @@ $dark_blue: rgb(64, 166, 221);
     .yellow-box{
         background-color: $yellow;
     }
+}
+
+.lds-ring {
+  display: inline-block;
+  position: relative;
+  width: 64px;
+  height: 64px;
+}
+.lds-ring div {
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  width: 51px;
+  height: 51px;
+  margin: 6px;
+  border: 6px solid #fff;
+  border-radius: 50%;
+  animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  border-color: #fff transparent transparent transparent;
+}
+.lds-ring div:nth-child(1) {
+  animation-delay: -0.45s;
+}
+.lds-ring div:nth-child(2) {
+  animation-delay: -0.3s;
+}
+.lds-ring div:nth-child(3) {
+  animation-delay: -0.15s;
+}
+@keyframes lds-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

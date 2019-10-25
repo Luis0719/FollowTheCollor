@@ -13,6 +13,7 @@ var readyPlayers = 0;
 var playersOnGame = 0;
 var colorSequence = [];
 var round = 1;
+var changingLeader = false;
 
 // Define static folder
 app.use(express.static('public'));
@@ -74,13 +75,15 @@ io.on('connection', function(socket){
       io.sockets.emit('lobby-remove-player', socket.id);
     }
 
-    if (hasGameStarted && socket.id == leader.id){
+    if (!changingLeader && hasGameStarted && socket.id == leader.id){
       console.log(`Leader with ID ${socket.id} disconnected. Initiating process to select new leader.`);
       leader = get_leader();
       console.log(`New leader: ${leader.id}`);
-      leader.emit('redirect', "http://localhost:3000/leader");
+      leader.emit('redirect', `http://localhost:3000/leader?name=${leader.playername}`);
+      changingLeader = true;
     }else{
       console.log(`${socket.id} disconnected`);
+      changingLeader = false;
     }
   });
 
@@ -99,7 +102,7 @@ io.on('connection', function(socket){
     
     playersOnGame++;
     // Start game if all players are on the game-view
-    if(playersOnGame == readyPlayers){
+    if(playersOnGame >= readyPlayers){
       hasGameStarted = true;
       console.log("Starting game");
       console.log(parse_players());
@@ -140,9 +143,11 @@ io.on('connection', function(socket){
     }
   });
   
-  socket.on('leader-color-choice', function(color) {
+  socket.on('leader-color-choice', function(color) {    
     colorSequence.push(color);
     console.log(colorSequence);
+
+    io.sockets.emit('start-player-turn', round, colorSequence)
   });
 
   socket.on('player-add-player-color', function(color) {

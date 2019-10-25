@@ -1,42 +1,50 @@
 <h1>You are the leader</h1>
 
-<p>
-    <section class="game-container">
-        <div class="color-box color-box-red">
-            <button class="background js-add-colorbox" data-color='red'></button>
-        </div>
-        <div class="color-box color-box-blue">
-            <button class="background js-add-colorbox" data-color='blue'></button>
-        </div>
-        <div class="color-box color-box-yellow">
-            <button class="background js-add-colorbox" data-color='yellow'></button>
-        </div>
-        <div class="color-box color-box-green">
-            <button class="background js-add-colorbox" data-color='green'></button>
-        </div>
-    </section>
-</p>
+<table>
+    <tr>
+        <td class="align-top">
+            <section class="game-container">
+                <div class="color-box color-box-red">
+                    <button class="background js-add-colorbox" data-color='red'></button>
+                </div>
+                <div class="color-box color-box-blue">
+                    <button class="background js-add-colorbox" data-color='blue'></button>
+                </div>
+                <div class="color-box color-box-yellow">
+                    <button class="background js-add-colorbox" data-color='yellow'></button>
+                </div>
+                <div class="color-box color-box-green">
+                    <button class="background js-add-colorbox" data-color='green'></button>
+                </div>
+            </section>
+        </td>
 
-<p>
-    <h3>Current color sequence:</h3>
-    <section id="sequence-container" class="samples">
-        {{#each colorSequence}}
-            <div class="color-sample {{this}}-box"></div>
-        {{/each}}
-    </section>
-</p>
+        <td class="align-top">
+            <h3>Current color sequence:</h3>
+            <section id="sequence-container" class="samples mb-3">
+                {{#each colorSequence}}
+                    <div class="color-sample {{this}}-box"></div>
+                {{/each}}
+            </section>
 
-<p>
-    <h3>Players:</h3>
-    <section id="players-container">
-        {{#each players}}
-            <div>
-                <span>{{this.playername}}</span>
-                <div id="sequence-{{this.id}}"></div>
-            </div>
-        {{/each}}
-    </section>
-</p>
+            <h3>Players:</h3>
+            <section id="players-container">
+                {{#each players}}
+                    <div>
+                        <span>{{this.playername}}</span>
+                        <div id="sequence-{{this.id}}"></div>
+                    </div>
+                {{/each}}
+            </section>
+        </td>
+    </tr>
+</table>
+
+<div id="waiting-players-box" class="message-box">
+    <div class="content">
+        Waiting for players to play their turn
+    </div>
+</div>
 
 <script src="/socket.io/socket.io.js"></script>
 <script>
@@ -97,7 +105,7 @@
         color_box.className = `color-sample ${color}-box`;
         container.appendChild(color_box);
 
-        $('.js-add-colorbox').addClass('disabled');
+        $('#waiting-players-box').fadeIn();
 
         return false;
     })
