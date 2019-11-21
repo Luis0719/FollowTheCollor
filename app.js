@@ -182,6 +182,16 @@ io.on('connection', function(socket){
   });
 
   socket.on('usr-choice', function(color, choice_number) {
+    console.log(`Received choice number = ${choice_number}`);
+    if (!validate_usr_choice(choice_number)){
+      console.log(`Choice number isn't valid (evaluated with odd parity algorithm).`);
+      
+      socket.emit('usr-resend-choice');
+      return;
+    }
+    socket.emit('usr-choice-accepted');
+    choice_number = normalize_choice_number(choice_number);
+
     color_class = "correct";
     
     // Validate user choice
@@ -255,6 +265,16 @@ function parse_players() {
   }
 
   return players;
+}
+
+function validate_usr_choice(choice_number){
+  // Validate with odd parity algorithm
+  return (choice_number.match(/1/g) || 0).length % 2 == 1;
+}
+
+function normalize_choice_number(choice_number){
+  // Remove first bit that is the parity bit and parse to int
+  return parseInt(choice_number.substr(1, choice_number.length), 2);
 }
 
 

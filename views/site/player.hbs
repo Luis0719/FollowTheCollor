@@ -64,8 +64,44 @@
 <script>
     var socket = io();
     var choice_number;
-
+    var current_color;
     socket.emit('usr-register', "{{playername}}");
+
+    $('#youre-player-box').fadeIn();
+    setTimeout($('#youre-player-box').hide(), 2000);
+    $('#waiting-leader-box').show();
+
+    $('.js-add-colorbox').click(function(e){
+        e.preventDefault(); // prevents page reloading                
+        current_color = $(this).attr('data-color');     
+
+        send_choice();
+        return false;
+    });
+
+    function send_choice(){
+        // convert to binary
+        let choice_number_b = choice_number.toString(2);
+
+        // Give a small change of failure
+        let should_fail = Math.random() >= 0.5;
+        let ones_occurences = choice_number_b.match(/1/g) || 0;
+
+        // Add parity bit. Using odd parity algorithm
+        console.log(`Choice number b = ${choice_number_b}`);
+        if (ones_occurences.length % 2 == 0 || should_fail){
+            choice_number_b = "1" + choice_number_b;
+        }else{
+            choice_number_b = "0" + choice_number_b;
+        }
+        console.log(`Result choice number b = ${choice_number_b}`)
+
+        socket.emit('usr-choice', current_color, choice_number_b);
+    }
+
+    function clean_sequence(){
+        $('#sequence-container').empty();
+    }
 </script>
 
 <script>
@@ -97,31 +133,23 @@
         alert(`${leader_name} was chosed as the new leader. A new game will be started`);
     });
 
-    socket.on('redirect', function(destination) {
-        window.location.href = destination;
+    socket.on('usr-resend-choice', function(){
+        console.log('Choiced denied. Resending choice');
+        send_choice();
     });
-</script>
 
-<script>
-    $('#youre-player-box').fadeIn();
-    setTimeout($('#youre-player-box').hide(), 2000);
-    $('#waiting-leader-box').show();
-
-    $('.js-add-colorbox').click(function(e){
-        e.preventDefault(); // prevents page reloading                
-        let color = $(this).attr('data-color');
-        socket.emit('usr-choice', color, choice_number);
+    socket.on('usr-choice-accepted', function(){
+        console.log('Choice accepted');
         choice_number++;
 
         let container = document.getElementById("sequence-container");
         let color_box = document.createElement("div");
-        color_box.className = `color-sample ${color}-box`;
-        container.appendChild(color_box);
-
-        return false;
+        color_box.className = `color-sample ${current_color}-box`;
+        container.appendChild(color_box);   
     });
 
-    function clean_sequence(){
-        $('#sequence-container').empty();
-    }
+
+    socket.on('redirect', function(destination) {
+        window.location.href = destination;
+    });
 </script>
