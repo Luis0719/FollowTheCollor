@@ -100,6 +100,8 @@ io.on('connection', function(socket){
           if (game.playersOnGame <= 1){
             console.log(`The leader won the match`);
             game.leader.emit('ld-won');
+            reset_game();
+            leader.disconnect();
           }
         }, 3000);
       }, 4000);
@@ -115,6 +117,8 @@ io.on('connection', function(socket){
         if (game.playersOnGame <= 1){
           console.log(`The leader won the match`);
           game.leader.emit('ld-won');
+          reset_game();
+          leader.disconnect();
         }
       }
     }
@@ -265,6 +269,17 @@ function parse_players() {
   }
 
   return players;
+}
+
+function reset_game(){
+  game.leader = null;
+  game.hasGameStarted = false;
+  game.readyPlayers = 0;
+  game.playersOnGame = 0;
+  game.colorSequence = [];
+  game.round = 1;
+  game.changingLeader = false;
+  game.finishedPlayers = 0;
 }
 
 function validate_usr_choice(choice_number){
