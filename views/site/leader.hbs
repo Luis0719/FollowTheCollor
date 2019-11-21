@@ -42,32 +42,50 @@
 
 <div id="waiting-players-box" class="message-box">
     <div class="content">
-        Waiting for players to play their turn
+        <div>Waiting for players to play their turn</div>
+        <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+    </div>
+</div>
+
+<div id="waiting-players-box" class="message-box">
+    <div class="content">
+        <div>You were selected as the leader</div>
+    </div>
+</div>
+
+<div id="won-box" class="message-box">
+    <div class="content">
+        <div>All players lost. You won!</div>
     </div>
 </div>
 
 <script src="/socket.io/socket.io.js"></script>
 <script>
     var socket = io();
-    socket.emit('game-leader-ready', "{{playername}}");
 
-    socket.on('add-player-color', function(gameid, color){
+    socket.emit('ld-register', "{{playername}}");
+</script>
+
+<script>
+    socket.on('ld-user-choice', function(gameid, color, color_class){
         console.log("sequence-" + gameid);
         let container = document.getElementById(gameid);
         let color_box = document.createElement("div");
-        color_box.className = `color-sample ${color}-box`;
+        color_box.className = `color-sample ${color}-box ${color_class}`;
         container.appendChild(color_box);
     });
 
-    socket.on('leader-turn', function() {
+    socket.on('ld-start-turn', function() {
         $('.js-add-colorbox').removeClass('disabled');
+        $('#waiting-players-box').hide();
     });
 
-    socket.on('leader-won', function() {
-
+    socket.on('ld-won', function() {
+        $('#waiting-players-box').hide();
+        $('#won-box').hide();
     })
 
-    socket.on('set-players', function(players) {
+    socket.on('ld-set-players', function(players) {
         let container = document.getElementById('players-container');
         players = JSON.parse(players);
         console.log(players);
@@ -98,7 +116,7 @@
     $('.js-add-colorbox').click(function(e){
         e.preventDefault(); // prevents page reloading                
         let color = $(this).attr('data-color');
-        socket.emit('leader-color-choice', color);
+        socket.emit('ld-choice', color);
 
         let container = document.getElementById("sequence-container");
         let color_box = document.createElement("div");

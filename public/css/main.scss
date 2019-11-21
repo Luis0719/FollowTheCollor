@@ -183,6 +183,41 @@ ul{
     }
 }
 
+.crossmark{
+  width: 20px;
+  height: 20px;
+  border: 1px solid black;
+  background: blue;
+  position: relative;
+
+  &::before{
+    content: '';
+    background: red;
+    position: absolute;
+    top: 8px;
+    left: -8px;
+    height: 2px;
+    width: 170%;
+    transform: rotate(45deg);
+    border: 1px solid black;
+  }
+
+  &::after{
+    content: '';
+    background: red;
+    position: absolute;
+    top: 8px;
+    right: -8px;
+    height: 2px;
+    width: 170%;
+    transform: rotate(-45deg);
+    border: 1px solid black;
+  }
+}
+
+
+
+
 .lds-ring {
   display: inline-block;
   position: relative;

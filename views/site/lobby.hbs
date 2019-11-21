@@ -31,7 +31,7 @@
 <script>
     var socket = io();
     playername = $('input[name=playername]').val();
-    socket.emit('register-player', playername);
+    socket.emit('lobby-register-player', playername);
 
     $('.js-ready').click(function() {
         $(this).attr("disabled", true);

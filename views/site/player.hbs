@@ -40,19 +40,59 @@
     </div>
 </div>
 
+<div id="well-done-box" class="message-box">
+    <div class="content">
+        Well done! Turn finished
+    </div>
+</div>
+
+<div id="you-lost-box" class="message-box">
+    <div class="content">
+        Wrong choise. You lost
+    </div>
+</div>
+
+<div id="leader-disconnected-box" class="message-box">
+    <div class="content">
+        <div>The leader has disconnected. Wait until a new leader is chosed</div>
+        <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+    </div>
+</div>
+
 <script src="/socket.io/socket.io.js"></script>
 <script>
     var socket = io();
-    var targetColorSequence;
+    var choice_number;
 
-    socket.emit('game-player-ready', "{{playername}}");
+    socket.emit('usr-register', "{{playername}}");
+</script>
 
-    socket.on('start-player-turn', function(round, colorSequence){
+<script>
+    socket.on('usr-finished-turn', function(){
+        $('#well-done-box').fadeIn();
+        setTimeout($('#well-done-box').hide(), 2000);
+        $('#waiting-leader-box').show();
+    });
+
+    socket.on('usr-wrong-choice', function(){
+        $('#you-lost-box').fadeIn();
+    });
+
+    socket.on('usr-start-turn', function(round){
+        choice_number = 0;
         $('#round-span').text(round);
         $('#waiting-leader-box').hide();
-        targetColorSequence = colorSequence;
-        console.log(targetColorSequence);
-    })
+        console.log(`Starting round #${round}`);
+    });
+
+    socket.on('usr-leader-disconnected', function(){
+        $('#leader-disconnected-box').fadeIn();
+    });
+
+    socket.on('usr-leader-chosed', function(leader_name){
+        $('#leader-disconnected-box').hide();
+        alert(`${leader_name} was chosed as the new leader`);
+    });
 
     socket.on('redirect', function(destination) {
         window.location.href = destination;
@@ -67,7 +107,8 @@
     $('.js-add-colorbox').click(function(e){
         e.preventDefault(); // prevents page reloading                
         let color = $(this).attr('data-color');
-        socket.emit('player-add-player-color', color);
+        socket.emit('usr-choice', color, choice_number);
+        choice_number++;
 
         let container = document.getElementById("sequence-container");
         let color_box = document.createElement("div");
