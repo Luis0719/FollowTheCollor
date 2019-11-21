@@ -194,6 +194,40 @@ ul {
   background-color: #F3C677;
 }
 
+.wrong {
+  width: 20px;
+  height: 20px;
+  border: 1px solid black;
+  background: blue;
+  position: relative;
+}
+
+.wrong::before, .wrong::after {
+  content: '';
+  background: red;
+  position: absolute;
+  top: 8px;
+  height: 3px;
+  width: 175%;
+  border: 1px solid black;
+}
+
+.wrong::before {
+  left: -7px;
+  -webkit-transform: rotate(45deg);
+          transform: rotate(45deg);
+}
+
+.wrong::after {
+  right: -7px;
+  -webkit-transform: rotate(-45deg);
+          transform: rotate(-45deg);
+}
+
+.strike {
+  text-decoration: line-through;
+}
+
 .lds-ring {
   display: inline-block;
   position: relative;

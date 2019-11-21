@@ -1,4 +1,5 @@
-<h1>You are the leader</h1>
+<h1>{{playername}}</h1>
+<h2>You are the leader</h2>
 
 <table>
     <tr>
@@ -32,7 +33,7 @@
                 {{#each players}}
                     <div>
                         <span>{{this.playername}}</span>
-                        <div id="sequence-{{this.id}}"></div>
+                        <div id="sequence-{{this.id}}" class="player-sequence"></div>
                     </div>
                 {{/each}}
             </section>
@@ -47,7 +48,7 @@
     </div>
 </div>
 
-<div id="waiting-players-box" class="message-box">
+<div id="youre-leader-box" class="message-box">
     <div class="content">
         <div>You were selected as the leader</div>
     </div>
@@ -62,8 +63,14 @@
 <script src="/socket.io/socket.io.js"></script>
 <script>
     var socket = io();
-
     socket.emit('ld-register', "{{playername}}");
+
+    $('#youre-leader-box').fadeIn();
+    setTimeout(function() { $('#youre-leader-box').hide(); }, 2000);
+
+    function clean_player_choices(){
+        $('.player-sequence').empty();
+    }
 </script>
 
 <script>
@@ -82,8 +89,13 @@
 
     socket.on('ld-won', function() {
         $('#waiting-players-box').hide();
-        $('#won-box').hide();
+        $('#won-box').fadeIn();
     })
+
+    socket.on('ld-usr-lost', function(gameid, playername){
+        alert(`${playername} Lost!`);
+        $('#' + gameid).prev().addClass('strike');
+    });
 
     socket.on('ld-set-players', function(players) {
         let container = document.getElementById('players-container');
@@ -99,6 +111,7 @@
 
             let sequence_div = document.createElement("div");
             sequence_div.id = player.id;
+            sequence_div.className = 'player-sequence'
 
             parent_div.appendChild(name_span);
             parent_div.appendChild(sequence_div);
@@ -122,6 +135,8 @@
         let color_box = document.createElement("div");
         color_box.className = `color-sample ${color}-box`;
         container.appendChild(color_box);
+
+        clean_player_choices();
 
         $('#waiting-players-box').fadeIn();
 

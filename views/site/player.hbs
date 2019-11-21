@@ -1,4 +1,5 @@
-<h1>Round #<span id="round-span">1</span></h1>
+<h1>{{playername}}</h1>
+<h2>Round #<span id="round-span">1</span></h2>
 
 <table>
     <tr>
@@ -70,7 +71,7 @@
 <script>
     socket.on('usr-finished-turn', function(){
         $('#well-done-box').fadeIn();
-        setTimeout($('#well-done-box').hide(), 2000);
+        setTimeout(function() { $('#well-done-box').hide(); }, 2000);
         $('#waiting-leader-box').show();
     });
 
@@ -78,20 +79,22 @@
         $('#you-lost-box').fadeIn();
     });
 
-    socket.on('usr-start-turn', function(round){
+    socket.on('usr-start-turn', function(round, newcolor){
+        alert(`Leader selected ${newcolor}`);
         choice_number = 0;
         $('#round-span').text(round);
         $('#waiting-leader-box').hide();
         console.log(`Starting round #${round}`);
+        clean_sequence();
     });
-
+  
     socket.on('usr-leader-disconnected', function(){
         $('#leader-disconnected-box').fadeIn();
     });
 
     socket.on('usr-leader-chosed', function(leader_name){
         $('#leader-disconnected-box').hide();
-        alert(`${leader_name} was chosed as the new leader`);
+        alert(`${leader_name} was chosed as the new leader. A new game will be started`);
     });
 
     socket.on('redirect', function(destination) {
@@ -116,5 +119,9 @@
         container.appendChild(color_box);
 
         return false;
-    })
+    });
+
+    function clean_sequence(){
+        $('#sequence-container').empty();
+    }
 </script>

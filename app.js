@@ -82,14 +82,40 @@ io.on('connection', function(socket){
       console.log(`Leader with ID ${socket.id} disconnected. Initiating process to select new leader.`);
       game.leader = get_leader();
       console.log(`New leader: ${game.leader.id}`);
-      game.leader.emit('redirect', `http://localhost:3000/leader?name=${game.leader.playername}`);
       game.changingLeader = true;
+      game.colorSequence = [];
+      game.round = 1;
+
+      game.playersOnGame--;
+      console.log(`${game.playersOnGame} players left`);
+
+      io.sockets.emit('usr-leader-disconnected');
+      setTimeout(function() { 
+        io.sockets.emit('usr-leader-chosed', game.leader.playername); 
+        game.leader.emit('redirect', `http://localhost:3000/leader?name=${game.leader.playername}`);
+
+        setTimeout(function(){
+          game.leader.emit('ld-set-players', JSON.stringify(parse_players()));
+
+          if (game.playersOnGame <= 1){
+            console.log(`The leader won the match`);
+            game.leader.emit('ld-won');
+          }
+        }, 3000);
+      }, 4000);
     }else{
       console.log(`${socket.id} disconnected`);
       game.changingLeader = false;
 
       if (game.hasGameStarted){
         game.playersOnGame--;
+        console.log(`${game.playersOnGame} players left`);
+        game.leader.emit('ld-usr-lost', socket.id, socket.playername);
+
+        if (game.playersOnGame <= 1){
+          console.log(`The leader won the match`);
+          game.leader.emit('ld-won');
+        }
       }
     }
   });
@@ -152,7 +178,7 @@ io.on('connection', function(socket){
     console.log(`New color sequence: ${game.colorSequence}`);
 
     game.finishedPlayers = 0;
-    io.sockets.emit('usr-start-turn', game.round);
+    io.sockets.emit('usr-start-turn', game.round, color);
   });
 
   socket.on('usr-choice', function(color, choice_number) {
@@ -162,14 +188,13 @@ io.on('connection', function(socket){
     if (color != game.colorSequence[choice_number]){
       socket.emit('usr-wrong-choice');
       color_class = "wrong";
-      console.log(`${socket.playername} choice #${choice_number} = ${color} was ${color_class}`);
       socket.disconnect();
     }else{
+      console.log(`${choice_number} choice vs ${game.round} round`);
       if (choice_number >= game.round-1){
         socket.emit('usr-finished-turn');
-  
+        
         game.finishedPlayers++;
-        console.log(`${game.finishedPlayers} finished vs ${game.playersOnGame} total`);
       }
     }
   
@@ -177,17 +202,18 @@ io.on('connection', function(socket){
     // Notify leader of the players choice
     game.leader.emit('ld-user-choice', socket.id, color, color_class);
 
-    if (game.finishedPlayers == game.playersOnGame-1){
+    if (game.finishedPlayers >= game.playersOnGame-1){
+      console.log(`Round #${game.round} finished.`);
       game.round++;
       game.leader.emit('ld-start-turn', game.round);
     }
   });
-  // End of Gameplay functions
 });
+// End of Gameplay functions
 
 function request_start_game(){
   console.log(`${game.playersOnGame} total players vs ${game.readyPlayers} ready players`)
-  if(game.playersOnGame == game.readyPlayers){
+  if(game.playersOnGame >= game.readyPlayers){
     game.hasGameStarted = true;
     console.log("Starting game");
     console.log(parse_players());
@@ -200,17 +226,19 @@ function get_leader(){
     var sockets = io.sockets.sockets;
   
     for (let socketId in sockets){
+      console.log(`Found process with ID=${socketId}`);
+      
       let curr_socket = sockets[socketId];
       if (typeof(leader) == 'undefined'){
         leader = curr_socket;
       }else{
         if (curr_socket.id > leader.id){
-          console.log(`New leader found with id: ${curr_socket.id}`);
           leader = curr_socket;
         }
       }
     }
   
+    console.log(`New leader with the highest Id selected ${leader.id}`);
     return leader;
 }
 
