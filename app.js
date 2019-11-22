@@ -2,6 +2,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var flash = require('connect-flash');
+var config = require('./config/keys');
 
 var app = express();
 var http = require('http').createServer(app);
@@ -92,7 +93,7 @@ io.on('connection', function(socket){
       io.sockets.emit('usr-leader-disconnected');
       setTimeout(function() { 
         io.sockets.emit('usr-leader-chosed', game.leader.playername); 
-        game.leader.emit('redirect', `http://localhost:3000/leader?name=${game.leader.playername}`);
+        game.leader.emit('redirect', `${config.site_url}/leader?name=${game.leader.playername}`);
 
         setTimeout(function(){
           game.leader.emit('ld-set-players', JSON.stringify(parse_players()));
@@ -101,7 +102,6 @@ io.on('connection', function(socket){
             console.log(`The leader won the match`);
             game.leader.emit('ld-won');
             reset_game();
-            leader.disconnect();
           }
         }, 3000);
       }, 4000);
@@ -118,7 +118,6 @@ io.on('connection', function(socket){
           console.log(`The leader won the match`);
           game.leader.emit('ld-won');
           reset_game();
-          leader.disconnect();
         }
       }
     }
@@ -143,11 +142,11 @@ io.on('connection', function(socket){
 
       for (let socketId in sockets){
         if(!sockets[socketId].isLeader)
-          sockets[socketId].emit('redirect', `http://localhost:3000/player?name=${sockets[socketId].playername}`);
+          sockets[socketId].emit('redirect', `${config.site_url}/player?name=${sockets[socketId].playername}`);
       }
 
       // Make sure the leader is the last one to be redirected. Otherwise the socket.on('disconnect') may cause problems
-      game.leader.emit('redirect', `http://localhost:3000/leader?name=${game.leader.playername}`);
+      game.leader.emit('redirect', `${config.site_url}/leader?name=${game.leader.playername}`);
 
       console.log(`${game.readyPlayers} ready players`)
     }
@@ -272,11 +271,10 @@ function parse_players() {
 }
 
 function reset_game(){
-  game.leader = null;
-  game.hasGameStarted = false;
   game.readyPlayers = 0;
   game.playersOnGame = 0;
   game.colorSequence = [];
+  game.hasGameStarted = false;
   game.round = 1;
   game.changingLeader = false;
   game.finishedPlayers = 0;
