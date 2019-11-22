@@ -291,6 +291,7 @@ function normalize_choice_number(choice_number){
 }
 
 
+// config port
 serv_port = process.env.PORT || 3000;
 http.listen(serv_port, function(){
   console.log(`Server listening on *:${serv_port}`);
